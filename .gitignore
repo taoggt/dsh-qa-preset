@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build / pack output
+*.tgz
+*.tar.gz
+dist/
+
+# Local env & secrets
+.env
+.env.*
+*.local
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# Logs
+*.log
+logs/
+
+# DSH local state
+.dsh/
+.cordis/

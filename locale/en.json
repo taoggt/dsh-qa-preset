@@ -1,0 +1,6 @@
+{
+  "meta": {
+    "title": "Q&A Only Mode preset",
+    "description": "A read-only agent preset selectable like Standard or Creator: the agent can only read and analyse files to answer questions, with no write, shell, install, delegation or other state-changing capability."
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "dsh-qa-preset",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DeepSeek Harness 仅问答模式预设：像「标准模式 / 创造模式」一样在新建会话时选择；只提供读取与分析文件的能力，禁止写入、执行与安装等一切会改变系统或代码状态的操作。",
+  "type": "module",
+  "icon": "icon.svg",
+  "license": "MIT",
+  "exports": {
+    "./enforce": "./enforce.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "cordis.patch.yml",
+    "enforce.js",
+    "locale/*.json",
+    "icon.svg",
+    "README.md"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

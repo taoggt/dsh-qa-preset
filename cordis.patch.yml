@@ -1,0 +1,94 @@
+# Bundle patch layer: declares one agent preset row. The preset is what the
+# New Session picker (and Settings > Agent presets) lists beside 标准模式 /
+# 创造模式; selecting it composes the read-only tool set below for that session.
+#
+# Deliberately absent: tool-bash/tool-pwsh (commands), tool-fs write/edit are
+# switched off in the tool-fs config, and there is no job/schedule/goal/todo/
+# present/delegation/plan-mode/plugin-manager tool. Nothing in this preset can
+# change system or code state; the model can only read and analyse files,
+# research the web, load skills and ask the user.
+- insert:
+    # Host-level enforcement row. A preset composition only controls the tools
+    # it mounts itself; host-global registrations (computer-use, agent-team,
+    # working-directory, …) are inherited by every session, so this process-wide
+    # plugin self-gates on the durable `agentPreset` projection and installs an
+    # agent-scoped guard + restriction for sessions whose effective preset is
+    # `qa` only. It must stay a sibling of the preset row, never inside its
+    # `plugins` list: its listeners observe host-realm agents.
+    - id: qa-preset-enforce
+      name: 'dsh-qa-preset/enforce'
+    - id: preset-qa
+      name: '@deepseek-ai/dsh-agent-preset'
+      config:
+        id: qa
+        name: 仅问答模式
+        description: 只读问答：只能读取和分析文件内容来回答、提供思路或建议，不能写文件、改代码、运行命令或安装依赖。
+        order: 5
+        plugins:
+          - id: persona
+            name: '@deepseek-ai/dsh-persona'
+            config:
+              prefix: |
+                You are in Q&A-only mode (仅问答模式), a read-only collaboration mode.
+
+                In this mode you may only read and analyze file content in order to
+                answer questions, explain how something works, or give ideas and
+                advice. Your available tools are limited to reading and searching
+                files (read, read_image, glob, grep), web research (web_search,
+                web_fetch), loading skills (skill), and asking the user a question
+                (ask_user_question). There is no write or edit tool, no shell or
+                command tool, no package installer, and no delegation, scheduling,
+                goal, todo, background-job or plugin-management tool in this mode.
+
+                Never claim or imply that you changed a file, ran a command,
+                installed something, or otherwise changed system or code state,
+                and never describe an action you did not perform. If the user asks
+                you to make changes, explain what you would change and how, then
+                tell them that this session is in Q&A-only mode and that starting a
+                new session with another mode (for example 标准模式) lets you
+                execute; do not ask them to switch this session's mode in place,
+                because a session keeps the preset it started with.
+
+                Answer in the user's language. When it helps, briefly remind the
+                user that this session is in Q&A-only mode.
+          - id: time-context
+            name: '@deepseek-ai/dsh-time-context'
+          - id: tool-fs
+            name: '@deepseek-ai/dsh-tool-fs'
+            config:
+              read: true
+              readImage: true
+              write: false
+              edit: false
+          - id: tool-fs-search
+            name: '@deepseek-ai/dsh-tool-fs-search'
+            config:
+              sampleOverCapGlobResults: false
+          - id: tool-web
+            name: '@deepseek-ai/dsh-tool-web'
+            config:
+              fetch: true
+              searchTimeoutMs: 60000
+          - id: skill-filesystem
+            name: '@deepseek-ai/dsh-skill-filesystem'
+          - id: tool-skill
+            name: '@deepseek-ai/dsh-tool-skill'
+          - id: tool-ask-user
+            name: '@deepseek-ai/dsh-tool-ask-user'
+          - id: compaction
+            name: cordis:group
+            group: true
+            isolate:
+              compaction: true
+              toolResultPruner: true
+            config:
+              - id: compaction-basic
+                name: '@deepseek-ai/dsh-compaction-basic'
+              - id: command-compact
+                name: '@deepseek-ai/dsh-command-compact'
+              - id: tool-result-pruner
+                name: '@deepseek-ai/dsh-compaction-tool-result-pruner'
+                config:
+                  thresholdChars: 8192
+                  headChars: 4096
+                  tailChars: 1024
