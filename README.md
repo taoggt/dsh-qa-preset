@@ -47,10 +47,6 @@ plugin_manager action=install_bundle target={Path}\dsh-qa-preset
 
 安装即注册预设行（`preset-qa`，`@deepseek-ai/dsh-agent-preset` 会在安装时急切激活）。验证：`plugin_manager list_plugins` 中 `include:preset-qa` 的 `fiberPhase` 为 `active`；新会话预设选择器出现「仅问答模式」；选中后该会话的 `request/header.tools` 只包含 `read, read_image, glob, grep, web_search, web_fetch, skill, ask_user_question`。
 
-## 与 `dsh-qa-mode` 的关系
-
-同工作区的 [`../dsh-qa-mode`](../dsh-qa-mode/README.md) 是更早实现的「`/qa` 会话内开关」版本；本预设才是「像标准模式/创造模式那样选择」的交付形态。两者可共存（`/qa` 开关默认关闭，不影响预设），但如需精简，可停用 `dsh-qa-mode` bundle。
-
 ## 限制
 
 - 预设是会话级的，不能在会话中途切换；修改需新会话。
